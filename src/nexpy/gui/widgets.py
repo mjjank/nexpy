@@ -2403,6 +2403,9 @@ class NXSortModel(QtCore.QSortFilterProxyModel):
             True if left is less than right, False otherwise.
         """
         try:
+            if not left.parent().isValid():
+                # Preserve the original load order of top-level files.
+                return left.row() < right.row()
             left_text = self.sourceModel().itemFromIndex(left).text()
             right_text = self.sourceModel().itemFromIndex(right).text()
             return natural_sort(left_text) < natural_sort(right_text)

@@ -935,8 +935,11 @@ class NXTreeView(QtWidgets.QTreeView):
 
     def toggle_sort(self, checked):
         """
-        Toggle the treeview between alphabetical and file (chronological)
-        ordering.
+        Toggle the ordering of groups/fields within each loaded file
+        between alphabetical and file (chronological) ordering.
+
+        The top-level list of loaded files is never reordered; only the
+        groups and fields nested within each file are affected.
 
         Parameters
         ----------
