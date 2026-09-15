@@ -527,6 +527,10 @@ class NXTreeView(QtWidgets.QTreeView):
         self.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.customContextMenuRequested.connect(self.on_context_menu)
 
+        self.sort_action = QtWidgets.QAction(
+            "Sort Alphabetically", self, checkable=True, checked=True)
+        self.sort_action.triggered.connect(self.toggle_sort)
+
     def __repr__(self):
         return 'NXTreeView("nxtree")'
 
@@ -755,6 +759,8 @@ class NXTreeView(QtWidgets.QTreeView):
         self.addMenu(self.mainwindow.restore_backup_action)
         self.menu.addSeparator()
         self.addMenu(self.mainwindow.collapse_action)
+        self.menu.addSeparator()
+        self.menu.addAction(self.sort_action)
         return self.menu
 
     def status_message(self, message):
@@ -926,6 +932,24 @@ class NXTreeView(QtWidgets.QTreeView):
         else:
             self.collapseAll()
             self.setCurrentIndex(self.model().index(0, 0))
+
+    def toggle_sort(self, checked):
+        """
+        Toggle the treeview between alphabetical and file (chronological)
+        ordering.
+
+        Parameters
+        ----------
+        checked : bool
+            True to sort items alphabetically (natural sort order),
+            False to restore the order in which items were loaded from
+            the file.
+        """
+        self.setSortingEnabled(checked)
+        if checked:
+            self.sortByColumn(0, QtCore.Qt.AscendingOrder)
+        else:
+            self.proxymodel.sort(-1)
 
     def on_context_menu(self, point):
         """
